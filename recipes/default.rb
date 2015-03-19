@@ -50,7 +50,7 @@ case node['platform_family']
 when 'debian'
   dist_dir = 'debian'
 when 'rhel'
-  dist_dir = redhat
+  dist_dir = 'redhat'
 end
 
 template '/etc/jboss-as.conf' do

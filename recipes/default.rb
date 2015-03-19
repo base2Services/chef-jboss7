@@ -41,9 +41,9 @@ template "#{node['jboss7']['jboss_home']}/bin/standalone.conf" do
   notifies :restart, "service[jboss]", :delayed
 end
 
-dist_dir, conf_dir = value_for_platform_family(
-  ['debian'] => %w{ debian default },
-  ['rhel'] => %w{ redhat sysconfig },
+dist_dir, _conf_dir = value_for_platform_family(
+  %w('debian') => %w( debian default ),
+  %w('rhel', 'centos', 'amazon') => %w( redhat sysconfig )
 )
 
 template '/etc/jboss-as.conf' do
@@ -51,7 +51,7 @@ template '/etc/jboss-as.conf' do
   mode 0775
   owner 'root'
   group node['root_group']
-  only_if { platform_family?("rhel") }
+  only_if { platform_family?('rhel') }
   notifies :restart, 'service[jboss]', :delayed
 end
 

@@ -38,13 +38,20 @@ template "#{node['jboss7']['jboss_home']}/bin/standalone.conf" do
   owner node['jboss7']['jboss_user']
   group node['jboss7']['jboss_user']
   mode '0644'
-  notifies :restart, "service[jboss]", :delayed
+  notifies :restart, 'service[jboss]', :delayed
 end
 
-dist_dir, _conf_dir = value_for_platform_family(
-  %w('debian') => %w( debian default ),
-  %w('rhel', 'centos', 'amazon') => %w( redhat sysconfig )
-)
+# dist_dir, _conf_dir = value_for_platform_family(
+#   %w('debian') => %w( debian default ),
+#   %w('rhel') => %w( redhat sysconfig )
+# )
+
+case node['platform_family']
+when 'debian'
+  dist_dir = 'debian'
+when 'rhel'
+  dist_dir = redhat
+end
 
 template '/etc/jboss-as.conf' do
   source "#{dist_dir}/jboss-as.conf.erb"
